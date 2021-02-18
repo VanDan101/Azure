@@ -471,7 +471,7 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-07-01",
-            "name": "[variables('backendServerNIC')]",
+            "name": "[variables('backendServer2NIC')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                
