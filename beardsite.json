@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.1",
     "parameters": {
         "virtualMachines_backendSERVER_name": {
@@ -39,7 +39,11 @@
             "type": "String"
         }
     },
-    "variables": { "backendServer2Name": "backendServer2", "backendServer2NIC": "backendServer2NIC", "backendServer2-nsg": "backendServer2-nsg" },
+    "variables": { "backendServer2Name": "backendServer2", 
+    "backendServer2NIC": "backendServer2NIC", 
+    "backendServer2-nsg": "backendServer2-nsg", 
+    "publicIPAddresses_backendSERVER2_ip_name": "backendSERVER2_ip_name"
+    },
     "resources": [
         {
             "type": "Microsoft.Network/networkSecurityGroups",
@@ -195,6 +199,26 @@
             },
             "properties": {
                 "ipAddress": "13.84.179.180",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4,
+                "ipTags": []
+            }
+        },
+         {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-07-01",
+            "name": "[variables('publicIPAddresses_backendSERVER2_ip_name')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "BeardSite": "[resourceGroup().location]"
+            },
+            "sku": {
+                "name": "Basic",
+                "tier": "Regional"
+            },
+            "properties": {
+                "ipAddress": "13.84.179.192",
                 "publicIPAddressVersion": "IPv4",
                 "publicIPAllocationMethod": "Dynamic",
                 "idleTimeoutInMinutes": 4,
@@ -474,7 +498,7 @@
             "name": "[variables('backendServer2NIC')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-               
+               "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddresses_backendSERVER2_ip_name'))]",
                 "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_BeardSite_vnet_name'), 'default')]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', variables('backendServer2-nsg'))]"
             ],
