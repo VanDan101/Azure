@@ -471,6 +471,45 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-07-01",
+            "name": "[variables('backendServerNIC')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+               
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_BeardSite_vnet_name'), 'default')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('backendServer2-nsg'))]"
+            ],
+            "tags": {
+                "BeardSite": "[resourceGroup().location]"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig2",
+                        "properties": {
+                            "privateIPAddress": "10.0.4.25",
+                            "privateIPAllocationMethod": "Dynamic",
+                            
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_BeardSite_vnet_name'), 'default')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('backendServer2-nsg'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-07-01",
             "name": "[parameters('networkInterfaces_frontendserver859_name')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
